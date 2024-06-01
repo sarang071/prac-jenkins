@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_CREDENTIALS = 'Dockerhub'
+        DOCKERHUB_CREDENTIALS = '01'
         DOCKERHUB_REPO = 'sarangp007/sample-nginx-qa' 
 
     }
