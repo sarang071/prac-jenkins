@@ -1,19 +1,41 @@
 pipeline {
     agent any
+
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('Dockerhub')
+        DOCKERHUB_REPO = 'sarangp007/sample-nginx-qa' 
+
+    }
+
     stages {
-        stage('Build') {
+        stage('Checkout') {
             steps {
-                echo "Checking"
+                checkout scm
             }
         }
-        stage('Test') {
+
+        stage('Build Docker Image') {
             steps {
-                echo "testing"
+                script {
+                    def commitId = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+                    def imageName = "${env.DOCKERHUB_REPO}:${commitId}"
+
+                    sh "docker build -t ${imageName} ."
+                }
             }
         }
-        stage('Deploy') {
+
+        stage('Push Docker Image') {
             steps {
-                echo "deploying"
+                script {
+                    def commitId = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+                    def imageName = "${env.DOCKERHUB_REPO}:${commitId}"
+
+                    withCredentials([usernamePassword(credentialsId: env.DOCKERHUB_CREDENTIALS, usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
+                        sh "echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin"
+                        sh "docker push ${imageName}"
+                    }
+                }
             }
         }
     }
