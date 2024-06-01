@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('Dockerhub')
+        DOCKERHUB_CREDENTIALS = 'Dockerhub'
         DOCKERHUB_REPO = 'sarangp007/sample-nginx-qa' 
 
     }
@@ -31,7 +31,7 @@ pipeline {
                     def commitId = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
                     def imageName = "${env.DOCKERHUB_REPO}:${commitId}"
 
-                    withCredentials([usernamePassword(credentialsId: env.DOCKERHUB_CREDENTIALS, usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
+                    withCredentials([usernamePassword(credentialsId: env.DOCKERHUB_CREDENTIALS, usernameVariable: 'sarangp007', passwordVariable: 'timers123')]) {
                         sh "echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin"
                         sh "docker push ${imageName}"
                     }
