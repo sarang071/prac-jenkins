@@ -28,7 +28,7 @@ pipeline{
             }
             steps{
                 script{
-                    docker.withRegistry("$env.registry_endpoint",registryCreds){
+                    docker.withRegistry(registry_endpoint,registryCreds){
                         docker_app.push()
                         docker_app.push(latest)
                     }
