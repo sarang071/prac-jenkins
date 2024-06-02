@@ -15,10 +15,11 @@ pipeline{
             }
             steps{
                 script{
-                    dockerwithRegistry(registry_endpoint,dh_creds)
+                    dockerwithRegistry(registry_endpoint,dh_creds){
                     def Img = docker.build(tag,file_path)
 
                     Img.push()
+                }
                 }
             }
         }
