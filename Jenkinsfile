@@ -6,14 +6,14 @@ pipeline{
         registryCreds = '01'
     }
 
-    // stages{
+    stages{
 
-    //     stage('Checkout SCM'){
+        // stage('Checkout SCM'){
 
-    //         steps{
-    //             checkout scm
-    //         }
-    //     }
+        //     steps{
+        //         git ''
+        //     }
+        // }
 
         stage('build'){
             steps{
