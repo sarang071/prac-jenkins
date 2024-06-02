@@ -1,42 +1,26 @@
 pipeline{
     agent any
-    environment{
-        registryURI = "https://registry.hub.docker.com/"
-        registry = "sarangp007/sample-nginx-qa"
-        registryCreds = '01'
+    environment {
+        RegistryURL = " https://registry.hub.docker.com"
+        RepoName = "sarangp007/sample-nginx-qa"
+        dh_creds = "dockerhub_creds"
     }
 
     stages{
-
-        // stage('Checkout SCM'){
-
-        //     steps{
-        //         git ''
-        //     }
-        // }
-
-        stage('build'){
-            steps{
-                script{
-                    def docker_app = docker.build("$env.registryURI" + ":" + "$GIT_COMMIT")
-                }
-            }
-        }
-        stage('Deploy Image'){
-            environment{
-                registry_endpoint = "$env.registryURI" + "$env.registry"
+        stage('build image') {
+            environment {
+                registry_endpoint = "${env.RegistryURL}" + "${env.RepoName}"
+                tag = "${env.RepoName}" + ":$GIT_COMMIT"
+                file_path = "${workspace}/"
             }
             steps{
                 script{
-                    docker.withRegistry(registry_endpoint,registryCreds){
-                        docker_app.push()
-                        docker_app.push(latest)
-                    }
+                    dockerwithRegistry(registry_endpoint,dh_creds)
+                    def Img = docker.build(tag,file_path)
+
+                    Img.push()
                 }
             }
         }
-
-
     }
-
 }
