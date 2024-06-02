@@ -4,8 +4,10 @@ pipeline{
 
     stages{
 
-        stage{
+        stage('Test'){
+            steps {
             echo "first script"
+            }
 
         }
     }
